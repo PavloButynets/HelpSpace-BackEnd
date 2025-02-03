@@ -2,7 +2,9 @@ import express from "express"
 import { myDataSource } from "./core/config/database.js"
 import { serverSetup } from "./core/config/server.js";
 import { logger } from "./utils/logger.js";
+import dotenv from "dotenv";
 
+dotenv.config();
 myDataSource
     .initialize()
     .then(() => {
@@ -15,7 +17,7 @@ myDataSource
 const app = express();
 
 const start = async (): Promise<void> => {
-    try {
+    try {        
         await serverSetup(app); 
     } catch (err) {
         logger.error(err);

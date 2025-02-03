@@ -15,12 +15,10 @@ export interface ErrorDictionary {
     readonly NOT_FOUND: ErrorMessage;
     readonly BAD_REQUEST: ErrorMessage;
     readonly INTERNAL_SERVER_ERROR: ErrorMessage;
-    // і т.д.
 
     // Генератори помилок
     readonly DUPLICATE_RECORD_ERROR: ErrorGenerator<[string]>;
     readonly VALIDATION_ERROR: ErrorGenerator<[string]>;
     readonly FIELD_IS_NOT_DEFINED: ErrorGenerator<[string]>;
     readonly FIELD_IS_NOT_OF_PROPER_TYPE: ErrorGenerator<[string, string]>;
-    // і т.д.
 }
