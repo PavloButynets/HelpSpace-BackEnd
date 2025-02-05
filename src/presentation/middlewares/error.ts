@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { CustomError } from "../utils/errorsHelper.js";
-import { errors } from "../consts/errors.js";
-import { logger } from "../utils/logger.js";
-import { getUniqueFields } from "../utils/getUniqueFields.js";
+import { CustomError } from "../../utils/errorsHelper.js";
+import { errors } from "../../consts/errors.js";
+import { logger } from "../../utils/logger.js";
+import { getUniqueFields } from "../../utils/getUniqueFields.js";
 
 export const errorMiddleware = (
   err: CustomError,

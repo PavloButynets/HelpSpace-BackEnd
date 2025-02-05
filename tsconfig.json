@@ -30,16 +30,16 @@
     "baseUrl": "./src",
   },
   "include": [
-    "src/**/*"
+    "./src/**/*"
   ],
   "tsc-alias": {
    "resolveFullPaths": true,
-   "verbose": false
  },
   "exclude": [
     "node_modules",
     "dist"
   ],
   "types": ["node", "express"],
-  "type": "module"
+  "type": "module",
+
 }

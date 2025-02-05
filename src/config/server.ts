@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { initialization } from "./initialization.js"; 
-import { logger } from "../../utils/logger.js";
+import { logger } from "../utils/logger.js";
 import { config } from "./envConfig.js";
 
 export const serverSetup = async (app: Application): Promise<void> => {

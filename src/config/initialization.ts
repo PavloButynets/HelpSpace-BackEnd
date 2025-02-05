@@ -3,9 +3,9 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 import { config  } from './envConfig.js'; 
-import { router } from "../../routes/user.js";
-import { createNotFoundError } from '../../utils/errorsHelper.js';
-import { errorMiddleware } from '../../middlewares/error.js';
+import { router } from "../presentation/routes/user.js";
+import { createNotFoundError } from '../utils/errorsHelper.js';
+import { errorMiddleware } from '../presentation/middlewares/error.js';
 const CLIENT_URL = config.CLIENT_URL;
 
 export const initialization = (app: Application): void => {

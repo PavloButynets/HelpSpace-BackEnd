@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon src/app.ts",
+    "dev": "ts-node-dev --respawn --transpile-only --loader ts-node/esm ./src/app.ts",
     "build": "tsc",
     "start": "node --experimental-specifier-resolution=node dist/app.js"
   },
@@ -24,6 +25,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.0.1",
+    "inversify": "^6.2.2",
     "module-alias": "^2.2.3",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2",
@@ -54,11 +56,11 @@
     "rimraf": "^6.0.1",
     "ts-jest": "^29",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
     "typescript-transform-paths": "^3"
-  },
-  "type": "module"
+  }
 }
