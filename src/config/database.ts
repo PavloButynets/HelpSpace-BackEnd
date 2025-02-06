@@ -7,8 +7,8 @@ export const myDataSource = new DataSource({
     username: "postgres",
     password: "root",
     database: "HelpSpace",
-    entities: ["src/entities/*.ts"],
-    migrations: ['src/migration/*.ts'],
+    entities: ["src/domain/entities/*.ts"],
+    migrations: ['migrations/*.ts'],
     logging: false,
     synchronize: true,
 })

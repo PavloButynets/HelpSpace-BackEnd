@@ -1,8 +1,15 @@
-import { Router } from 'express';
+import express from "express";
+import { AppContainer} from "../../container";
+import {UserController} from "../controllers/UserСontroller";
+import {USER_TYPES} from "../../container/types/UserTypes";
 
-export const router: Router = Router();
 
-router.get('/test', (req, res) => {
-  console.log('Запит на /test отримано!');
-  res.send('Привіт, це відповідь від сервера!');
-});
+
+export const userRoutes = () => {
+    const container = AppContainer.getInstance().getContainer();
+    const router = express.Router();
+    const userController = container.get<UserController>(USER_TYPES.UserController);
+    router.get('/getUsers', userController.getUsers);
+
+    return router
+}

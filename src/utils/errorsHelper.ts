@@ -1,5 +1,5 @@
-import { errors } from '../consts/errors.js';
-import { ErrorMessage } from 'utils/errors.interface.js';
+import { errors } from '../consts/errors';
+import { ErrorMessage } from 'utils/errors.interface';
 
 const { UNAUTHORIZED, NOT_FOUND, FORBIDDEN, BAD_REQUEST } = errors
 

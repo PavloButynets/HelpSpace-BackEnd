@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
-  "type": "module",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only --loader ts-node/esm ./src/app.ts",
+    "dev": "ts-node-dev --respawn --transpile-only --inspect -- src/app.ts",
     "build": "tsc",
+    "generate-migration": "npx typeorm-ts-node-esm migration:generate -d src/config/database.ts migrations/$npm_config_name",
     "start": "node --experimental-specifier-resolution=node dist/app.js"
   },
   "repository": {

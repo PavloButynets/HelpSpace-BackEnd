@@ -1,10 +1,12 @@
+import {AppContainer} from "./container";
 import express from "express"
-import { myDataSource } from "./config/database.js"
-import { serverSetup } from "./config/server.js";
-import { logger } from "./utils/logger.js";
+import { myDataSource } from "./config/database"
+import { serverSetup } from "./config/server";
+import { logger } from "./utils/logger";
 import dotenv from "dotenv";
-import {AppContainer} from "./container/index.js";
 
+const appContainer = AppContainer.getInstance();
+appContainer.loadModules();
 dotenv.config();
 myDataSource
     .initialize()
@@ -15,8 +17,6 @@ myDataSource
         console.error("Error during Data Source initialization:", err)
     })
 
-const appContainer = AppContainer.getInstance();
-appContainer.loadModules();
 
 const app = express();
 

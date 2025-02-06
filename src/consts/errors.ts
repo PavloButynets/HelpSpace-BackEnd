@@ -1,4 +1,4 @@
-import { ErrorDictionary } from "../utils/errors.interface.js";
+import { ErrorDictionary } from "../utils/errors.interface";
 
 export const errors: ErrorDictionary = {
     UNAUTHORIZED: {
