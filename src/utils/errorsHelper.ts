@@ -13,10 +13,20 @@ export class CustomError extends Error {
         this.code = code;
     }
 }
+export const extractErrorDetails = (err: Error): Record<string, any> => {
+    const errorDetails: Record<string, any> = {};
+
+    // Автоматично отримуємо всі властивості з об'єкта помилки
+    Object.keys(err).forEach((key) => {
+        errorDetails[key] = (err as any)[key];
+    });
+
+    return errorDetails;
+};
 
 
 export const createError = (status: number, errorInfo: ErrorMessage): CustomError => {
-    const err = new CustomError(errorInfo.message, status, errorInfo.code)
+    const err = new CustomError(errorInfo.message, status, errorInfo.name)
 
     return err
 }
@@ -36,3 +46,9 @@ export const createNotFoundError = () => {
 export const createBadRequestError = () => {
     return createError(400, BAD_REQUEST as ErrorMessage)
 }
+
+export const alreadyExistsError = (entity: string) => {
+    const errorInfo = errors.DUPLICATE_RECORD_ERROR(entity);
+
+    return createError(409, errorInfo);
+};

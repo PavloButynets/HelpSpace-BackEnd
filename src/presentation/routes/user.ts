@@ -7,9 +7,10 @@ import {USER_TYPES} from "../../container/types/UserTypes";
 
 export const userRoutes = () => {
     const container = AppContainer.getInstance().getContainer();
+
     const router = express.Router();
     const userController = container.get<UserController>(USER_TYPES.UserController);
-    router.get('/getUsers', userController.getUsers);
+    router.get('/getUsers', userController.getUsers.bind(userController));
 
     return router
 }

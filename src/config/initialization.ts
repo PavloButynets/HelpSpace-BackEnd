@@ -10,10 +10,10 @@ const CLIENT_URL = config.CLIENT_URL;
 
 export const initialization = (app: Application): void => {
 
-  app.use("/", AppRoutes.routes);
 
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true }));
+    app.use("/", AppRoutes.routes);
 
   app.use(cookieParser());
   app.use(
@@ -29,7 +29,7 @@ export const initialization = (app: Application): void => {
       console.log("error");
     next(createNotFoundError());
   });
+    app.use(errorMiddleware);
 
-  app.use(errorMiddleware);
 };
 

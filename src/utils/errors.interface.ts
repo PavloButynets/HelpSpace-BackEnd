@@ -1,13 +1,10 @@
-// Базовий інтерфейс для статичних помилок
 export interface ErrorMessage {
-    code: string;
+    name: string;
     message: string;
 }
 
-// Тип для функцій-генераторів помилок
 export type ErrorGenerator<T extends any[]> = (...args: T) => ErrorMessage;
 
-// Розділяємо статичні помилки і генератори
 export interface ErrorDictionary {
     // Статичні помилки
     readonly UNAUTHORIZED: ErrorMessage;
@@ -15,10 +12,16 @@ export interface ErrorDictionary {
     readonly NOT_FOUND: ErrorMessage;
     readonly BAD_REQUEST: ErrorMessage;
     readonly INTERNAL_SERVER_ERROR: ErrorMessage;
+    readonly BODY_IS_NOT_DEFINED: ErrorMessage;
 
     // Генератори помилок
     readonly DUPLICATE_RECORD_ERROR: ErrorGenerator<[string]>;
     readonly VALIDATION_ERROR: ErrorGenerator<[string]>;
     readonly FIELD_IS_NOT_DEFINED: ErrorGenerator<[string]>;
-    readonly FIELD_IS_NOT_OF_PROPER_TYPE: ErrorGenerator<[string, string]>;
+    readonly FIELD_IS_NOT_OF_PROPER_TYPE: ErrorGenerator<[string, string|string[]]>;
+    readonly FIELD_IS_NOT_OF_PROPER_LENGTH: ErrorGenerator<[string, number, number ]>;
+    readonly FIELD_IS_NOT_IN_RANGE: ErrorGenerator<[string, number, number]>;
+    readonly FIELD_IS_NOT_OF_PROPER_FORMAT: ErrorGenerator<[string]>;
+    readonly FIELD_IS_NOT_OF_PROPER_ENUM_VALUE: ErrorGenerator<[string, string[]]>;
+    readonly OBJECT_MUST_HAVE_PROPERTY: ErrorGenerator<[string]>;
 }

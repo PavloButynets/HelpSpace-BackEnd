@@ -5,43 +5,24 @@ import { logger } from "../../utils/logger";
 import { getUniqueFields } from "../../utils/getUniqueFields";
 
 export const errorMiddleware = (
-  err: CustomError,
-  _req: Request,
-  res: Response,
-  _next: NextFunction
+    err: CustomError,
+    _req: Request,
+    res: Response,
+    _next: NextFunction
 ): void => {
-  const { name, status, code, message } = err;
   logger.error(err);
 
-  const dataErrors = {
-    QueryFailedError: (message: string, statusCode?: number) => {
-      if (statusCode === 23505) {
-        const uniqueFields = getUniqueFields(message);
-        res.status(409).json({
-          status: 409,
-          ...errors.DUPLICATE_RECORD_ERROR(uniqueFields)
-        });
-      }
-      res.status(500).json({
-        status: 500,
-        ...errors.INTERNAL_SERVER_ERROR
-      });
-    },
-    ValidationError: (message: string) => {
-      res.status(400).json({
-        status: 400,
-        ...errors.VALIDATION_ERROR(message)
-      });
-    }
-  } as const;
-
-  if (name in dataErrors) {
-    const handleDataError = dataErrors[name as keyof typeof dataErrors];
-    handleDataError(message, status);
+  if (isQueryFailedError(err)) {
+    handleQueryFailedError(err, res);
     return;
   }
 
-  if (!status || !code) {
+  if (isValidationError(err)) {
+    handleValidationError(err, res);
+    return;
+  }
+
+  if (!err.status || !err.code) {
     res.status(500).json({
       status: 500,
       ...errors.INTERNAL_SERVER_ERROR
@@ -49,9 +30,30 @@ export const errorMiddleware = (
     return;
   }
 
-  res.status(status).json({
-    status,
-    code,
-    message
+  res.status(err.status).json({
+    status: err.status,
+    code: err.code,
+    message: err.message
+  });
+};
+
+const isQueryFailedError = (err: CustomError): boolean =>
+    err.code === "23505";
+
+const isValidationError = (err: CustomError): boolean =>
+    err.name === "ValidationError";
+
+const handleQueryFailedError = (err: CustomError, res: Response): void => {
+  const uniqueFields = getUniqueFields(err);
+  res.status(409).json({
+    status: 409,
+    ...errors.DUPLICATE_RECORD_ERROR(uniqueFields)
+  });
+};
+
+const handleValidationError = (err: CustomError, res: Response): void => {
+  res.status(400).json({
+    status: 400,
+    ...errors.VALIDATION_ERROR(err.message)
   });
 };

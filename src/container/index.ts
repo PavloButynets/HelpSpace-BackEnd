@@ -1,5 +1,7 @@
 import { Container } from 'inversify';
 import userModuleContainer from "./modules/UserModule";
+import databaseModuleContainer from "./modules/DatabaseModules";
+import authModuleContainer from "./modules/AuthModule";
 
 export class AppContainer {
     private static _instance: AppContainer | null = null; // Singleton instance
@@ -17,11 +19,13 @@ export class AppContainer {
     }
 
     public loadModules(): void {
+        this.container.load(databaseModuleContainer)
+        this.container.load(authModuleContainer)
         this.container.load(userModuleContainer);
-
     }
 
     public getContainer(): Container {
         return this.container;
     }
+
 }
