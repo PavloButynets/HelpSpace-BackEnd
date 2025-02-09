@@ -6,7 +6,6 @@ import { config  } from './envConfig';
 import  { AppRoutes}  from "../presentation/routes/index";
 import { createNotFoundError } from '../utils/errorsHelper';
 import { errorMiddleware } from '../presentation/middlewares/error';
-const CLIENT_URL = config.CLIENT_URL;
 
 export const initialization = (app: Application): void => {
 
@@ -18,7 +17,7 @@ export const initialization = (app: Application): void => {
   app.use(cookieParser());
   app.use(
     cors({
-      origin: CLIENT_URL,
+      origin: config.CLIENT_URL,
       credentials: true,
       methods: 'GET, POST, PATCH, DELETE',
       allowedHeaders: 'Content-Type, Authorization',

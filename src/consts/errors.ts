@@ -25,6 +25,22 @@ export const errors: ErrorDictionary = {
         name: 'BODY_IS_NOT_DEFINED',
         message: 'The body of the request must be determined.'
     },
+    USER_NOT_FOUND: {
+        name: 'USER_NOT_FOUND',
+        message: 'User with the specified email was not found.'
+    },
+    INCORRECT_CREDENTIALS: {
+        name: 'INCORRECT_CREDENTIALS',
+        message: 'The password you entered is incorrect.'
+    },
+    USER_ALREADY_EXISTS: {
+        name: 'USER_ALREADY_EXISTS',
+        message: 'User with the specified email already exists.'
+    },
+    INVALID_TOKEN_NAME: {
+        name: 'INVALID_TOKEN_NAME',
+        message: 'The token name you used is invalid.'
+    },
     FIELD_IS_NOT_OF_PROPER_TYPE: (field: string | string[]) => ({
         name: 'FIELD_IS_NOT_OF_PROPER_TYPE',
         message: `The field "${field}" is not of the expected type.`
@@ -52,7 +68,7 @@ export const errors: ErrorDictionary = {
     }),
     FIELD_IS_NOT_OF_PROPER_FORMAT: (field: string) => ({
         name: 'FIELD_IS_NOT_OF_PROPER_FORMAT',
-        message: `The field "${field}" does not match the expected format.`
+        message: `The field ${field} does not match the expected format.`
     }),
     FIELD_IS_NOT_OF_PROPER_ENUM_VALUE: (field: string, allowedValues: string[]) => ({
         name: 'FIELD_IS_NOT_OF_PROPER_ENUM_VALUE',

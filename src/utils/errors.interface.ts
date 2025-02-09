@@ -13,7 +13,10 @@ export interface ErrorDictionary {
     readonly BAD_REQUEST: ErrorMessage;
     readonly INTERNAL_SERVER_ERROR: ErrorMessage;
     readonly BODY_IS_NOT_DEFINED: ErrorMessage;
-
+    readonly USER_NOT_FOUND: ErrorMessage;
+    readonly USER_ALREADY_EXISTS: ErrorMessage;
+    readonly INCORRECT_CREDENTIALS: ErrorMessage;
+    readonly INVALID_TOKEN_NAME: ErrorMessage;
     // Генератори помилок
     readonly DUPLICATE_RECORD_ERROR: ErrorGenerator<[string]>;
     readonly VALIDATION_ERROR: ErrorGenerator<[string]>;

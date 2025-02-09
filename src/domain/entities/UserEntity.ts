@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne} from "typeorm";
+import {Token} from "./TokenEntity";
 
 export enum UserRole {
     ADMIN = "admin",
@@ -9,7 +10,7 @@ export enum UserRole {
 @Entity("users")
 export class User {
     @PrimaryGeneratedColumn('uuid')
-    id: number;
+    id: string;
 
     @Column({ type: "varchar", length: 255 })
     first_name: string;
@@ -17,10 +18,10 @@ export class User {
     @Column({ type: "varchar", length: 255 })
     last_name: string;
 
-    @Column({ type: "varchar", length: 255 })
+    @Column({ type: "varchar", length: 255, nullable: true })
     country: string;
 
-    @Column({ type: "varchar", length: 255 }) // Місто
+    @Column({ type: "varchar", length: 255, nullable: true})
     city: string;
 
     @Column({ type: "varchar", length: 255, unique: true })
@@ -38,9 +39,21 @@ export class User {
     @Column({ type: "enum", enum: UserRole, default: UserRole.USER })
     role: UserRole;
 
+    @Column({ type: "boolean", default: false })
+    isBlocked: boolean;
+
+    @Column({type: "timestamp", nullable: true})
+    lastLogin: Date
+
+
     @CreateDateColumn({ type: "timestamp" })
     created_at: Date;
 
     @UpdateDateColumn({ type: "timestamp" })
     updated_at: Date;
+
+
+
+    @OneToOne(() => Token, token => token.user)
+    tokens: Token[];
 }

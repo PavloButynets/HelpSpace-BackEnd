@@ -1,4 +1,4 @@
-import { Repository, DataSource, EntityTarget } from "typeorm";
+import {Repository, DataSource, EntityTarget, FindOptionsWhere} from "typeorm";
 import {IBaseRepository} from "../../domain/repositories/IBaseRepository";
 
 export abstract class BaseRepository<T extends Object> implements IBaseRepository<T> {
@@ -24,4 +24,9 @@ export abstract class BaseRepository<T extends Object> implements IBaseRepositor
     async deleteById(id: string): Promise<void> {
         await this.repository.delete(id);
     }
+
+    async getByFilter(filter: FindOptionsWhere<T>): Promise<T[]> {
+        return this.repository.find({ where: filter });
+    }
+
 }

@@ -4,7 +4,8 @@ import {AUTH_TYPES} from "../../container/types/AuthTypes";
 import {AuthController} from "../controllers/AuthController";
 import {asyncWrapper} from "../middlewares/asyncWrapper";
 import {validationMiddleware} from "../middlewares/validationMiddleware";
-import {registerValidationEntity} from "../../validation/entities/register";
+import {registerValidationEntity} from "../../validation/schemas/register";
+import {loginValidationSchema} from "../../validation/schemas/login";
 
 
 
@@ -16,6 +17,9 @@ export const authRoutes = () => {
     router.post('/register',
         validationMiddleware(registerValidationEntity),
         asyncWrapper(authController.register.bind(authController)));
+    router.post('/login',
+        validationMiddleware(loginValidationSchema),
+        asyncWrapper(authController.login.bind(authController)));
 
     return router
 }
