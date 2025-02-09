@@ -11,7 +11,7 @@ export class UserController {
         try{
             //const users = await this.userService.getUsers();
 
-            return res.json(users);
+            return [];
         }
         catch(err){
             console.log(err);

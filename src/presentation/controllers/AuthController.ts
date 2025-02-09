@@ -7,6 +7,14 @@ import {LoginResponseDTO} from "../../application/dto/LoginResponseDTO";
 import { config } from "../../config/envConfig";
 import {tokenNames} from "../../consts/auth";
 
+type CookieOptions = {
+    maxAge: number,
+    httpOnly: boolean,
+    secure: boolean,
+    sameSite: 'none' | 'lax' | 'strict' | 'none',
+    domain: string
+}
+
 @injectable()
 export class AuthController {
     private authService: AuthService;
@@ -27,7 +35,7 @@ export class AuthController {
         const oneDayInMs = 24 * 60 * 60 * 1000;
         const thirtyDaysInMs = 30 * oneDayInMs;
 
-        const COOKIE_OPTIONS = {
+        const COOKIE_OPTIONS: CookieOptions = {
             maxAge: 24 * 60 * 60 * 1000,
             httpOnly: true,
             secure: true,

@@ -5,7 +5,7 @@ import {errors} from '../../consts/errors';
 import {tokenNames} from '../../consts/auth';
 import {createError} from '../../utils/errorsHelper';
 import {TOKEN_TYPES} from "../../container/types/TokenTypes";
-import {inject} from "inversify";
+import {inject, injectable} from "inversify";
 import {ITokenRepository} from "../../domain/repositories/ITokenRepository";
 
 export interface ITokenPayload {
@@ -29,6 +29,7 @@ const {
 
 const {INVALID_TOKEN_NAME} = errors;
 
+@injectable()
 export class TokenService {
     private _tokenRepository: ITokenRepository;
 
