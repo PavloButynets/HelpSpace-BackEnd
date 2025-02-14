@@ -2,9 +2,9 @@ import {IUserRepository} from "../../domain/repositories/IUserRepository";
 import {inject, injectable} from "inversify";
 import {USER_TYPES} from "../../container/types/UserTypes";
 import {User} from "../../domain/entities/UserEntity";
-import {RegisterUserDTO} from "../dto/RegisterUserDTO";
+import {RegisterUserDTO} from "../dto/request/RegisterUserDTO";
 import {hashPassword} from "../../utils/passwordHelper";
-import {UserResponseDTO} from "../dto/UserResponseDTO";
+import {UserResponseDTO} from "../dto/response/UserResponseDTO";
 
 @injectable()
 export class UserService {
@@ -27,5 +27,16 @@ export class UserService {
             email: savedUser.email,
             lastLogin: savedUser.lastLogin,
         }
+    }
+    async getUsers(): Promise<UserResponseDTO[]> {
+        const users: User[] = await this.userRepository.findAll();
+        return users.map(user => {
+            return {
+                firstName: user.first_name,
+                lastName: user.last_name,
+                email: user.email,
+                lastLogin: user.lastLogin,
+            }
+        })
     }
 }

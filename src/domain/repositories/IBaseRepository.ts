@@ -1,13 +1,16 @@
-import {FindOptionsWhere} from "typeorm";
+export interface IFindItemsDataSet<T> {
+    count: number;
+    rows: T[]
+}
 
 export interface IBaseRepository<T> {
     deleteById(id: string): Promise<void>;
 
     findById(id: string): Promise<T | null>;
 
-    getAll(): Promise<T[]>;
+    findAll(): Promise<T[]>;
 
-    getByFilter(filter: FindOptionsWhere<T>): Promise<T[]>;
+    //findItemsByParams(filter: FindOptionsWhere<T>): Promise<IFindItemsDataSet<T>>;
 
     save(entity: T): Promise<T>;
 }

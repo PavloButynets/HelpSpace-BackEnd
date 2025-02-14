@@ -3,6 +3,7 @@ import userModuleContainer from "./modules/UserModule";
 import databaseModuleContainer from "./modules/DatabaseModules";
 import authModuleContainer from "./modules/AuthModule";
 import tokenModuleContainer from "./modules/TokenModule";
+import projectModuleContainer from "./modules/ProjectModule";
 
 export class AppContainer {
     private static _instance: AppContainer | null = null; // Singleton instance
@@ -24,6 +25,7 @@ export class AppContainer {
         this.container.load(authModuleContainer)
         this.container.load(userModuleContainer);
         this.container.load(tokenModuleContainer);
+        this.container.load(projectModuleContainer)
     }
 
     public getContainer(): Container {

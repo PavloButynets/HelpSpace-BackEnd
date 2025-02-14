@@ -1,5 +1,8 @@
-import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, OneToMany} from "typeorm";
 import {Token} from "./TokenEntity";
+import {Project} from "./ProjectEntity";
+import {ProjectAssignment} from "./ProjectAssignmentEntity";
+import {OrganizationMembership} from "./OrganizationMembership";
 
 export enum UserRole {
     ADMIN = "admin",
@@ -56,4 +59,14 @@ export class User {
 
     @OneToOne(() => Token, token => token.user)
     tokens: Token[];
+
+    @OneToMany(() => Project, (project) => project.creator)
+    projectsCreated: Project[];
+
+    @OneToMany(() => ProjectAssignment, (projectAssignment) => projectAssignment.user)
+    assignedProjects: ProjectAssignment[];
+
+    @OneToMany(() => OrganizationMembership, (organizationMember) => organizationMember.user)
+    organizations: OrganizationMembership[];
+
 }

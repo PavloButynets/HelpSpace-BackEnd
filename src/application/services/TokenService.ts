@@ -8,7 +8,8 @@ import {TOKEN_TYPES} from "../../container/types/TokenTypes";
 import {inject, injectable} from "inversify";
 import {ITokenRepository} from "../../domain/repositories/ITokenRepository";
 
-export interface ITokenPayload {
+export interface ITokenPayload extends JwtPayload {
+    id: string;
     email: string;
     rememberMe?: boolean;
 
@@ -114,18 +115,18 @@ export class TokenService {
         }
     }
 
-    async findToken(tokenValue: string, tokenName: string): Promise<Token | null> {
-        if (!Object.values(tokenNames).includes(tokenName)) {
-            throw createError(404, INVALID_TOKEN_NAME);
-        }
-
-        try {
-            const token: Token[] = await this._tokenRepository.getByFilter({[tokenName]: tokenValue});
-            return token[0];
-        } catch (error) {
-            return null;
-        }
-    }
+    // async findToken(tokenValue: string, tokenName: string): Promise<Token | null> {
+    //     if (!Object.values(tokenNames).includes(tokenName)) {
+    //         throw createError(404, INVALID_TOKEN_NAME);
+    //     }
+    //
+    //     try {
+    //         const token: Token[] = await this._tokenRepository.getByFilter({[tokenName]: tokenValue});
+    //         return token[0];
+    //     } catch (error) {
+    //         return null;
+    //     }
+    // }
 
 
     async removeRefreshToken(refreshToken: string): Promise<void> {

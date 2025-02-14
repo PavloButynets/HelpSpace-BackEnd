@@ -1,19 +1,13 @@
 import {inject, injectable} from "inversify";
 import {Request, Response} from "express";
 import {AuthService} from "../../application/services/AuthService";
-import {RegisterUserDTO} from "../../application/dto/RegisterUserDTO";
+import {RegisterUserDTO} from "../../application/dto/request/RegisterUserDTO";
 import {AUTH_TYPES} from "../../container/types/AuthTypes";
-import {LoginResponseDTO} from "../../application/dto/LoginResponseDTO";
-import { config } from "../../config/envConfig";
+import {LoginResponseDTO} from "../../application/dto/response/LoginResponseDTO";
 import {tokenNames} from "../../consts/auth";
-
-type CookieOptions = {
-    maxAge: number,
-    httpOnly: boolean,
-    secure: boolean,
-    sameSite: 'none' | 'lax' | 'strict' | 'none',
-    domain: string
-}
+import {plainToInstance} from "class-transformer";
+import {LoginRequestDTO} from "../../application/dto/request/LoginRequest";
+import {COOKIE_OPTIONS} from "../../config/initialization";
 
 @injectable()
 export class AuthController {
@@ -29,23 +23,16 @@ export class AuthController {
     }
 
     async login (req: Request, res: Response): Promise<void> {
-        const {email, password, rememberMe} = req.body;
-        const user: LoginResponseDTO = await this.authService.login(email, password, rememberMe);
+
+        const loginDto: LoginRequestDTO = plainToInstance(LoginRequestDTO, req.body);
+        const user: LoginResponseDTO = await this.authService.login(loginDto);
 
         const oneDayInMs = 24 * 60 * 60 * 1000;
         const thirtyDaysInMs = 30 * oneDayInMs;
 
-        const COOKIE_OPTIONS: CookieOptions = {
-            maxAge: 24 * 60 * 60 * 1000,
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            domain: config.COOKIE_DOMAIN
-        }
-
         const refreshTokenCookieOptions = {
             ...COOKIE_OPTIONS,
-            maxAge: rememberMe ? thirtyDaysInMs : oneDayInMs
+            maxAge: loginDto.rememberMe ? thirtyDaysInMs : oneDayInMs
         }
 
         res.cookie(tokenNames.ACCESS_TOKEN, user.accessToken, COOKIE_OPTIONS)

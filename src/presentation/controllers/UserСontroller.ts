@@ -9,9 +9,9 @@ export class UserController {
 
     async getUsers  (req: Request, res: Response) {
         try{
-            //const users = await this.userService.getUsers();
+            const users = await this.userService.getUsers();
 
-            return [];
+            return users;
         }
         catch(err){
             console.log(err);

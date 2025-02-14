@@ -1,16 +1,17 @@
 import {UserRepository} from "../../infrastructure/repositories/UserRepository";
 import {USER_TYPES} from "../../container/types/UserTypes";
 import {inject, injectable} from "inversify";
-import {RegisterUserDTO} from "../dto/RegisterUserDTO";
+import {RegisterUserDTO} from "../dto/request/RegisterUserDTO";
 import {UserService} from "./UserService";
-import {UserResponseDTO} from "../dto/UserResponseDTO";
+import {UserResponseDTO} from "../dto/response/UserResponseDTO";
 import {createError} from "../../utils/errorsHelper";
 import { errors } from "../../consts/errors";
 import {comparePasswords} from "../../utils/passwordHelper";
-import {LoginResponseDTO} from "../dto/LoginResponseDTO";
+import {LoginResponseDTO} from "../dto/response/LoginResponseDTO";
 import {TokenService} from "./TokenService";
 import {TOKEN_TYPES} from "../../container/types/TokenTypes";
 import {tokenNames} from "../../consts/auth";
+import {LoginRequestDTO} from "../dto/request/LoginRequest";
 
 @injectable()
 export class AuthService {
@@ -35,7 +36,9 @@ constructor(
         return user
     }
 
-    async login(email: string, password: string, rememberMe: boolean): Promise<LoginResponseDTO> {
+    async login(loginDto: LoginRequestDTO): Promise<LoginResponseDTO> {
+
+        const {email, password, rememberMe} = loginDto;
 
         const user = await this._userRepository.findByEmail(email);
         if (!user) {
@@ -46,8 +49,7 @@ constructor(
         if (!checkedPassword) {
             throw createError(401, errors.INCORRECT_CREDENTIALS)
         }
-
-        const tokens = this._tokenService.generateTokens({email, rememberMe})
+        const tokens = this._tokenService.generateTokens({email, rememberMe, id: user.id})
 
         await this._tokenService.saveToken(user.id, tokens.refreshToken, tokenNames.REFRESH_TOKEN)
 

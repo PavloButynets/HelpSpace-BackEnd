@@ -3,11 +3,9 @@ import express from "express"
 import { myDataSource } from "./config/database"
 import { serverSetup } from "./config/server";
 import { logger } from "./utils/logger";
-import dotenv from "dotenv";
 
 const appContainer = AppContainer.getInstance();
 appContainer.loadModules();
-dotenv.config();
 myDataSource
     .initialize()
     .then(() => {

@@ -1,19 +1,23 @@
-import {NextFunction, Request, Response} from "express";
-import {errors} from "../../consts/errors";
-import {validateEntity} from "../../validation/shemaValidator";
-import {createError} from "../../utils/errorsHelper";
+import { plainToInstance } from "class-transformer";
+import { validate } from "class-validator";
+import { NextFunction, Request, Response } from "express";
 
-export const validationMiddleware = (entity: Record<string, any>, source: 'body' | 'query' = 'body') => {
-    return (req: Request, _res: Response, next: NextFunction) => {
-        if (source === 'body' && !req[source]) {
-            throw createError(422, errors.BODY_IS_NOT_DEFINED)
+export const validationMiddleware = (dto: any) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
+        const instance = plainToInstance(dto, req.body);
+
+        const errors = await validate(instance);
+        if (errors.length > 0) {
+            return res.status(422).json({
+                message: "Validation failed",
+                errors: errors.map(err => ({
+                    field: err.property,
+                    constraints: err.constraints
+                }))
+            });
         }
 
-        const data = req[source]
-        validateEntity(entity, data)
-
-        next()
-    }
-}
-
-
+        req.body = instance;
+        return next();
+    };
+};

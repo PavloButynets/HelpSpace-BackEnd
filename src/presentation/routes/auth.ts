@@ -5,7 +5,7 @@ import {AuthController} from "../controllers/AuthController";
 import {asyncWrapper} from "../middlewares/asyncWrapper";
 import {validationMiddleware} from "../middlewares/validationMiddleware";
 import {registerValidationEntity} from "../../validation/schemas/register";
-import {loginValidationSchema} from "../../validation/schemas/login";
+import {LoginRequestDTO} from "../../application/dto/request/LoginRequest";
 
 
 
@@ -18,7 +18,7 @@ export const authRoutes = () => {
         validationMiddleware(registerValidationEntity),
         asyncWrapper(authController.register.bind(authController)));
     router.post('/login',
-        validationMiddleware(loginValidationSchema),
+        validationMiddleware(LoginRequestDTO),
         asyncWrapper(authController.login.bind(authController)));
 
     return router
