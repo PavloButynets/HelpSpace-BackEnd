@@ -10,7 +10,6 @@ export const userRoutes = () => {
 
     const router = express.Router();
     const userController = container.get<UserController>(USER_TYPES.UserController);
-    router.get('/getUsers', userController.getUsers.bind(userController));
 
     return router
 }
