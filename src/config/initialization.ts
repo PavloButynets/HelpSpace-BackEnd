@@ -15,7 +15,7 @@ type CookieOptions = {
     domain: string
 }
 export const COOKIE_OPTIONS: CookieOptions = {
-    maxAge: 24 * 60 * 60 * 1000,
+    maxAge: 24 * 60 * 60 * 10000,
     httpOnly: true,
     secure: true,
     sameSite: 'none',

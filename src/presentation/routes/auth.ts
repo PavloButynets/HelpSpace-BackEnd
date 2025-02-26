@@ -14,12 +14,14 @@ export const authRoutes = () => {
 
     const router = express.Router();
     const authController = container.get<AuthController>(AUTH_TYPES.AuthController);
-    router.post('/register',
+    router.post('/signup',
         validationMiddleware(RegisterUserDTO),
         asyncWrapper(authController.register.bind(authController)));
     router.post('/login',
         validationMiddleware(LoginRequestDTO),
         asyncWrapper(authController.login.bind(authController)));
 
+    router.get('/refresh', asyncWrapper(authController.refreshAccessToken.bind(authController)));
+    router.post('/logout', asyncWrapper(authController.logout.bind(authController)));
     return router
 }

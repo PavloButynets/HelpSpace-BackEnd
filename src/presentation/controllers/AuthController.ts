@@ -8,6 +8,7 @@ import {tokenNames} from "../../consts/auth";
 import {plainToInstance} from "class-transformer";
 import {LoginRequestDTO} from "../../application/dto/request/LoginRequest";
 import {COOKIE_OPTIONS} from "../../config/initialization";
+import {errors} from "../../consts/errors";
 
 @injectable()
 export class AuthController {
@@ -27,18 +28,35 @@ export class AuthController {
         const loginDto: LoginRequestDTO = plainToInstance(LoginRequestDTO, req.body);
         const user: LoginResponseDTO = await this.authService.login(loginDto);
 
-        const oneDayInMs = 24 * 60 * 60 * 1000;
-        const thirtyDaysInMs = 30 * oneDayInMs;
-
-        const refreshTokenCookieOptions = {
-            ...COOKIE_OPTIONS,
-            maxAge: loginDto.rememberMe ? thirtyDaysInMs : oneDayInMs
-        }
 
         res.cookie(tokenNames.ACCESS_TOKEN, user.accessToken, COOKIE_OPTIONS)
-        res.cookie(tokenNames.REFRESH_TOKEN, user.refreshToken, refreshTokenCookieOptions)
+        res.cookie(tokenNames.REFRESH_TOKEN, user.refreshToken, COOKIE_OPTIONS)
 
-        const { refreshToken, ...userWithoutRefreshToken } = user;
-        res.status(200).json(userWithoutRefreshToken);
+        const { accessToken } = user;
+        res.status(201).json({ accessToken: accessToken});
+    }
+
+    async logout (req: Request, res: Response): Promise<void> {
+        const refreshToken = req.cookies[tokenNames.REFRESH_TOKEN];
+        await this.authService.logout(refreshToken);
+
+        res.clearCookie(tokenNames.ACCESS_TOKEN)
+        res.clearCookie(tokenNames.REFRESH_TOKEN)
+
+        res.status(200).json({ message: "Logged out successfully" });
+    }
+    async refreshAccessToken (req: Request, res: Response): Promise<void> {
+        const refreshToken = req.cookies[tokenNames.REFRESH_TOKEN];
+        if(!refreshToken) {
+            res.clearCookie(tokenNames.ACCESS_TOKEN)
+
+            res.status(401).json({ message: errors.UNAUTHORIZED });
+        }
+        const user: LoginResponseDTO = await this.authService.refreshAccessToken(refreshToken);
+
+        res.cookie(tokenNames.ACCESS_TOKEN, user.accessToken, COOKIE_OPTIONS)
+        res.cookie(tokenNames.REFRESH_TOKEN, user.refreshToken, COOKIE_OPTIONS)
+
+        res.status(201).json({ accessToken: user.accessToken});
     }
 }

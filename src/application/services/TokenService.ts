@@ -115,18 +115,13 @@ export class TokenService {
         }
     }
 
-    // async findToken(tokenValue: string, tokenName: string): Promise<Token | null> {
-    //     if (!Object.values(tokenNames).includes(tokenName)) {
-    //         throw createError(404, INVALID_TOKEN_NAME);
-    //     }
-    //
-    //     try {
-    //         const token: Token[] = await this._tokenRepository.getByFilter({[tokenName]: tokenValue});
-    //         return token[0];
-    //     } catch (error) {
-    //         return null;
-    //     }
-    // }
+    async findTokenByValue(tokenValue: string): Promise<Token | null> {
+        try {
+            return await this._tokenRepository.findTokenByValue(tokenValue);
+        } catch (error) {
+            return null;
+        }
+    }
 
 
     async removeRefreshToken(refreshToken: string): Promise<void> {

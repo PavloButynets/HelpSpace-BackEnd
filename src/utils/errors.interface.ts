@@ -1,5 +1,5 @@
 export interface ErrorMessage {
-    name: string;
+    code: string;
     message: string;
 }
 
@@ -17,8 +17,9 @@ export interface ErrorDictionary {
     readonly USER_ALREADY_EXISTS: ErrorMessage;
     readonly INCORRECT_CREDENTIALS: ErrorMessage;
     readonly INVALID_TOKEN_NAME: ErrorMessage;
+    readonly BAD_REFRESH_TOKEN: ErrorMessage;
     // Генератори помилок
-    readonly DUPLICATE_RECORD_ERROR: ErrorGenerator<[string]>;
+    readonly ALREADY_REGISTERED: ErrorGenerator<[string]>;
     readonly VALIDATION_ERROR: ErrorGenerator<[string]>;
     readonly FIELD_IS_NOT_DEFINED: ErrorGenerator<[string]>;
     readonly FIELD_IS_NOT_OF_PROPER_TYPE: ErrorGenerator<[string, string|string[]]>;

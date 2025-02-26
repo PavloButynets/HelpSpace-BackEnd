@@ -30,4 +30,5 @@ export class TokenRepository extends BaseRepository<Token> implements ITokenRepo
         }
         return token;
     }
+
 }

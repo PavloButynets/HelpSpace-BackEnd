@@ -47,7 +47,7 @@ const handleQueryFailedError = (err: CustomError, res: Response): void => {
   const uniqueFields = getUniqueFields(err);
   res.status(409).json({
     status: 409,
-    ...errors.DUPLICATE_RECORD_ERROR(uniqueFields)
+    ...errors.ALREADY_REGISTERED(uniqueFields)
   });
 };
 

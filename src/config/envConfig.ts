@@ -8,7 +8,7 @@ export const config = {
     JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET || "secret",
     JWT_ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN as StringValue || "1h",
     JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || "secret",
-    JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN as StringValue || "7d",
+    JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN as StringValue || "24h",
     JWT_REFRESH_LONG_TERM_EXPIRES_IN: process.env.JWT_REFRESH_LONG_TERM_EXPIRES_IN as StringValue || "30d",
     JWT_RESET_SECRET: process.env.JWT_RESET_SECRET || "secret",
     JWT_RESET_EXPIRES_IN: process.env.JWT_RESET_EXPIRES_IN as StringValue || "1h",

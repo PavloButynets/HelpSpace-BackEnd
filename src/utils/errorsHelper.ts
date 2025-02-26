@@ -26,7 +26,7 @@ export const extractErrorDetails = (err: Error): Record<string, any> => {
 
 
 export const createError = (status: number, errorInfo: ErrorMessage): CustomError => {
-    const err = new CustomError(errorInfo.message, status, errorInfo.name)
+    const err = new CustomError(errorInfo.message, status, errorInfo.code)
 
     return err
 }
@@ -48,7 +48,7 @@ export const createBadRequestError = () => {
 }
 
 export const alreadyExistsError = (entity: string) => {
-    const errorInfo = errors.DUPLICATE_RECORD_ERROR(entity);
+    const errorInfo = errors.ALREADY_REGISTERED(entity);
 
     return createError(409, errorInfo);
 };

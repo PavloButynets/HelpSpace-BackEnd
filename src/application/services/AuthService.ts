@@ -12,6 +12,7 @@ import {TokenService} from "./TokenService";
 import {TOKEN_TYPES} from "../../container/types/TokenTypes";
 import {tokenNames} from "../../consts/auth";
 import {LoginRequestDTO} from "../dto/request/LoginRequest";
+import {User} from "../../domain/entities/UserEntity";
 
 @injectable()
 export class AuthService {
@@ -40,7 +41,7 @@ constructor(
 
         const {email, password, rememberMe} = loginDto;
 
-        const user = await this._userRepository.findByEmail(email);
+        const user: User | null = await this._userRepository.findByEmail(email);
         if (!user) {
             throw createError(401, errors.USER_NOT_FOUND)
         }
@@ -49,11 +50,33 @@ constructor(
         if (!checkedPassword) {
             throw createError(401, errors.INCORRECT_CREDENTIALS)
         }
-        const tokens = this._tokenService.generateTokens({email, rememberMe, id: user.id})
+        const tokens = this._tokenService.generateTokens({email, rememberMe, id: user.id, role: user.role})
 
         await this._tokenService.saveToken(user.id, tokens.refreshToken, tokenNames.REFRESH_TOKEN)
 
 
-        return new LoginResponseDTO(user.first_name, user.last_name, user.email, user.lastLogin, tokens.accessToken, tokens.refreshToken)
+        return new LoginResponseDTO(tokens.accessToken, tokens.refreshToken)
+    }
+
+    async logout(refreshToken: string): Promise<void> {
+        const tokenData = this._tokenService.validateRefreshToken(refreshToken)
+        if (!tokenData) {
+            throw createError(401, errors.BAD_REFRESH_TOKEN)
+        }
+        await this._tokenService.removeRefreshToken(refreshToken)
+    }
+    async refreshAccessToken(refreshToken: string): Promise<LoginResponseDTO> {
+        const tokenData = this._tokenService.validateRefreshToken(refreshToken)
+        const tokenFromDB = await this._tokenService.findTokenByValue(refreshToken)
+        if(!tokenFromDB || !tokenData) {
+            console.log('tokenData', refreshToken)
+            throw createError(401, errors.BAD_REFRESH_TOKEN)
+        }
+
+        const { id, email, role } = tokenData
+        const newTokens = this._tokenService.generateTokens({id, email, role})
+        await this._tokenService.saveToken(id, newTokens.refreshToken, tokenNames.REFRESH_TOKEN)
+
+        return new LoginResponseDTO(newTokens.accessToken, newTokens.refreshToken)
     }
 }
