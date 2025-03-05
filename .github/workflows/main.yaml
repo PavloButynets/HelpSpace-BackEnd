@@ -1,0 +1,39 @@
+name: Codacy Analysis for Node.js
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  codacy-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.11.1'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Install Codacy Coverage Reporter
+        run: |
+          curl -sSL https://github.com/codacy/codacy-coverage-reporter/releases/download/3.0.8/codacy-coverage-reporter-3.0.8-linux-amd64.tar.gz | tar -xz
+          chmod +x ./codacy-coverage-reporter-3.0.8-linux-amd64/bin/codacy-coverage-reporter
+
+      - name: Upload coverage to Codacy
+        run: |
+          ./codacy-coverage-reporter-3.0.8-linux-amd64/bin/codacy-coverage-reporter -l javascript -r coverage/lcov-report/index.js
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
