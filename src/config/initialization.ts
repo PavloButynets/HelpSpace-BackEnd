@@ -40,7 +40,6 @@ export const initialization = (app: Application): void => {
     );
 
     app.use((_req, _res, next) => {
-        console.log("error");
         next(createNotFoundError());
     });
     app.use(errorMiddleware);

@@ -11,7 +11,7 @@ export class UserService {
     constructor(@inject(USER_TYPES.IUserRepository) private userRepository: IUserRepository) {
     }
 
-    async createUser(user: RegisterUserDTO): Promise<UserResponseDTO> {
+    async createUser(user: RegisterUserDTO): Promise<User> {
         const hashedPassword = await hashPassword(user.password)
         const newUser = Object.assign(new User(), {
             first_name: user.firstName,
@@ -19,14 +19,7 @@ export class UserService {
             email: user.email,
             password: hashedPassword
         })
-
-        const savedUser: User = await this.userRepository.save(newUser);
-        return {
-            firstName: savedUser.first_name,
-            lastName: savedUser.last_name,
-            email: savedUser.email,
-            lastLogin: savedUser.lastLogin,
-        }
+        return await this.userRepository.save(newUser);
     }
     async getUsers(): Promise<UserResponseDTO[]> {
         const users: User[] = await this.userRepository.findAll();

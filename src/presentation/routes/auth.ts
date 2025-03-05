@@ -21,6 +21,8 @@ export const authRoutes = () => {
         validationMiddleware(LoginRequestDTO),
         asyncWrapper(authController.login.bind(authController)));
 
+    router.get('/confirm-email/:token', asyncWrapper(authController.confirmEmail.bind(authController)));
+
     router.get('/refresh', asyncWrapper(authController.refreshAccessToken.bind(authController)));
     router.post('/logout', asyncWrapper(authController.logout.bind(authController)));
     return router

@@ -18,6 +18,11 @@ export interface ErrorDictionary {
     readonly INCORRECT_CREDENTIALS: ErrorMessage;
     readonly INVALID_TOKEN_NAME: ErrorMessage;
     readonly BAD_REFRESH_TOKEN: ErrorMessage;
+    readonly API_TOKEN_NOT_RETRIEVED: ErrorMessage;
+    readonly EMAIL_NOT_SENT: ErrorMessage;
+    readonly TEMPLATE_NOT_FOUND: ErrorMessage;
+    readonly EMAIL_ALREADY_CONFIRMED: ErrorMessage;
+    readonly EMAIL_NOT_CONFIRMED: ErrorMessage;
     // Генератори помилок
     readonly ALREADY_REGISTERED: ErrorGenerator<[string]>;
     readonly VALIDATION_ERROR: ErrorGenerator<[string]>;

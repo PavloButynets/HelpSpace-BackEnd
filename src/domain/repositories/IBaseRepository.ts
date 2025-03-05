@@ -1,3 +1,5 @@
+import {QueryDeepPartialEntity} from "typeorm/query-builder/QueryPartialEntity";
+
 export interface IFindItemsDataSet<T> {
     count: number;
     rows: T[]
@@ -12,5 +14,6 @@ export interface IBaseRepository<T> {
 
     //findItemsByParams(filter: FindOptionsWhere<T>): Promise<IFindItemsDataSet<T>>;
 
+    update(id: string, entity: QueryDeepPartialEntity<T>): Promise<T>;
     save(entity: T): Promise<T>;
 }

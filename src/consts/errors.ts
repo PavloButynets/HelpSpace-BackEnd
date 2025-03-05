@@ -45,6 +45,26 @@ export const errors: ErrorDictionary = {
         code: 'INVALID_TOKEN_NAME',
         message: 'The token name you used is invalid.'
     },
+    API_TOKEN_NOT_RETRIEVED: {
+        code: 'API_TOKEN_NOT_RETRIEVED',
+        message: 'The access token has not been retrieved.'
+    },
+    EMAIL_NOT_SENT: {
+        code: 'EMAIL_NOT_SENT',
+        message: 'Email has not been sent.'
+    },
+    EMAIL_ALREADY_CONFIRMED: {
+        code: 'EMAIL_ALREADY_CONFIRMED',
+        message: 'User email has been already confirmed.'
+    },
+    EMAIL_NOT_CONFIRMED: {
+        code: 'EMAIL_NOT_CONFIRMED',
+        message: 'Please confirm your email to login.'
+    },
+    TEMPLATE_NOT_FOUND: {
+        code: 'TEMPLATE_NOT_FOUND',
+        message: 'The requested template was not found.'
+    },
     FIELD_IS_NOT_OF_PROPER_TYPE: (field: string | string[]) => ({
         code: 'FIELD_IS_NOT_OF_PROPER_TYPE',
         message: `The field "${field}" is not of the expected type.`

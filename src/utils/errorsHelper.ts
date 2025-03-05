@@ -27,7 +27,6 @@ export const extractErrorDetails = (err: Error): Record<string, any> => {
 
 export const createError = (status: number, errorInfo: ErrorMessage): CustomError => {
     const err = new CustomError(errorInfo.message, status, errorInfo.code)
-
     return err
 }
 

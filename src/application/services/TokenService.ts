@@ -2,7 +2,7 @@ import jwt, {JwtPayload} from 'jsonwebtoken';
 import {Token} from '../../domain/entities/TokenEntity';
 import {config} from '../../config/envConfig';
 import {errors} from '../../consts/errors';
-import {tokenNames} from '../../consts/auth';
+import {TokenName, tokenNames} from '../../consts/auth';
 import {createError} from '../../utils/errorsHelper';
 import {TOKEN_TYPES} from "../../container/types/TokenTypes";
 import {inject, injectable} from "inversify";
@@ -89,7 +89,7 @@ export class TokenService {
         return this.validateToken(token, JWT_CONFIRM_SECRET);
     }
 
-    async saveToken(userId: string, tokenValue: string, tokenName: string): Promise<Token | null> {
+    async saveToken(userId: string, tokenValue: string, tokenName: TokenName): Promise<Token | null> {
         if (!Object.values(tokenNames).includes(tokenName)) {
             throw createError(404, INVALID_TOKEN_NAME);
         }
@@ -105,8 +105,6 @@ export class TokenService {
             newToken.userId = userId;
             newToken[tokenName] = tokenValue;
 
-            console.log(newToken)
-
             tokenData = await this._tokenRepository.save(newToken)
 
             return tokenData;
@@ -115,9 +113,9 @@ export class TokenService {
         }
     }
 
-    async findTokenByValue(tokenValue: string): Promise<Token | null> {
+    async findTokenByValue(tokenValue: string, tokenName: TokenName): Promise<Token | null> {
         try {
-            return await this._tokenRepository.findTokenByValue(tokenValue);
+            return await this._tokenRepository.findTokenByValue(tokenValue, tokenName);
         } catch (error) {
             return null;
         }
@@ -125,7 +123,7 @@ export class TokenService {
 
 
     async removeRefreshToken(refreshToken: string): Promise<void> {
-        const token = await this._tokenRepository.findTokenByValue(refreshToken)
+        const token = await this._tokenRepository.findTokenByValue(refreshToken, tokenNames.REFRESH_TOKEN)
         token.refreshToken = null;
         await this._tokenRepository.save(token);
     }
@@ -139,7 +137,7 @@ export class TokenService {
     }
 
     async removeConfirmToken(confirmToken: string) {
-        const token = await this._tokenRepository.findTokenByValue(confirmToken)
+        const token = await this._tokenRepository.findTokenByValue(confirmToken, tokenNames.CONFIRM_TOKEN)
         token.confirmToken = null;
         await this._tokenRepository.save(token);
     }

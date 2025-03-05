@@ -15,3 +15,11 @@ export const config = {
     JWT_CONFIRM_SECRET: process.env.JWT_CONFIRM_SECRET || "secret",
     JWT_CONFIRM_EXPIRES_IN: process.env.JWT_CONFIRM_EXPIRES_IN as StringValue || "24h",
 }
+
+export const gmailCredentials = {
+    user: process.env.MAIL_USER,
+    clientId: process.env.GMAIL_CLIENT_ID,
+    clientSecret: process.env.GMAIL_CLIENT_SECRET,
+    refreshToken: process.env.GMAIL_REFRESH_TOKEN,
+    redirectUri: process.env.GMAIL_REDIRECT_URI
+}

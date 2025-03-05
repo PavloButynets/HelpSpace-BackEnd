@@ -21,7 +21,6 @@ export const errorMiddleware = (
     handleValidationError(err, res);
     return;
   }
-
   if (!err.status || !err.code) {
     res.status(500).json({
       status: 500,
@@ -41,7 +40,7 @@ const isQueryFailedError = (err: CustomError): boolean =>
     err.code === "23505";
 
 const isValidationError = (err: CustomError): boolean =>
-    err.name === "ValidationError";
+    err.code === "ValidationError";
 
 const handleQueryFailedError = (err: CustomError, res: Response): void => {
   const uniqueFields = getUniqueFields(err);

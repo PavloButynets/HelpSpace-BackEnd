@@ -18,7 +18,6 @@ export class AuthMiddleware {
     }
 
     authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-        console.log(req.cookies)
         const { accessToken } = req.cookies;
 
         if (!accessToken) {
