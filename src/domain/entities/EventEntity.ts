@@ -5,16 +5,17 @@ import {
     ManyToOne,
     CreateDateColumn,
     UpdateDateColumn,
-    OneToMany, JoinColumn
+    OneToMany, JoinColumn, ManyToMany, JoinTable
 } from 'typeorm';
 import { User } from './UserEntity';
-import {ProjectCategory, ProjectStatus} from "../../consts/enums";
-import {ProjectAssignment} from "./ProjectAssignmentEntity";
+import { Category } from './CategoryEntity';
+import {ProjectStatus} from "../../consts/enums";
+import {EventAssignment} from "./EventAssignmentEntity";
 
-@Entity('projects')
-export class Project {
-    @PrimaryGeneratedColumn()
-    id: number;
+@Entity('events')
+export class Event {
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
     @Column({ type: 'varchar', length: 255 })
     title: string;
@@ -31,8 +32,11 @@ export class Project {
     @Column({ type: 'varchar', length: 255, nullable: true })
     location: string;
 
-    @Column({ type: 'varchar', enum: ProjectCategory, default: ProjectCategory.OTHER })
-    category: ProjectCategory;
+    @Column({ type: 'timestamp' })
+    startDate: Date;
+
+    @Column({ type: 'timestamp' })
+    endDate: Date;
 
     @Column({ type: 'timestamp', nullable: true })
     deadline: Date;
@@ -49,7 +53,7 @@ export class Project {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @ManyToOne(() => User, (user) => user.assignedProjects, { nullable: false, onDelete: 'CASCADE' })
+    @ManyToOne(() => User, (user) => user.assignedEvents, { nullable: false, onDelete: 'CASCADE', eager: true })
     @JoinColumn({ name: 'creator_id' })
     creator: User;
 
@@ -57,7 +61,15 @@ export class Project {
     // @JoinColumn({ name: 'organization_id' })
     // assignedOrganization?: Organization;
 
-    @OneToMany(() => ProjectAssignment, (assignment) => assignment.project)
-    assignedVolunteers: ProjectAssignment[];
+    @ManyToMany(() => Category, category => category.events, { eager: true })
+    @JoinTable({
+        name: 'event_categories',
+        joinColumn: { name: 'event_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'category_id', referencedColumnName: 'id' },
+    })
+    categories: Category[];
+
+    @OneToMany(() => EventAssignment, (assignment) => assignment.event)
+    assignedVolunteers: EventAssignment[];
 
 }

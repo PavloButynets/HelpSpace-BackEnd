@@ -16,7 +16,7 @@ import { lengths } from "../../../consts/validation";
 
 const { MAX_TITLE_LENGTH, MAX_PROJECT_DESCRIPTION_LENGTH, MIN_DESCRIPTION_LENGTH } = lengths;
 
-export class CreateProjectDTO {
+export class CreateEventDTO {
     @IsString()
     @MaxLength(MAX_TITLE_LENGTH)
     title: string;

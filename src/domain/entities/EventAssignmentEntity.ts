@@ -1,17 +1,17 @@
 import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
-import {Project} from "./ProjectEntity";
+import {Event} from "./EventEntity";
 import {User} from "./UserEntity";
 
 @Entity('project_assignments')
-export class ProjectAssignment {
+export class EventAssignment {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => Project, (project) => project.assignedVolunteers, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Event, (project) => project.assignedVolunteers, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'project_id' })
-    project: Project;
+    event: Event;
 
-    @ManyToOne(() => User, (user) => user.assignedProjects, { onDelete: 'CASCADE' })
+    @ManyToOne(() => User, (user) => user.assignedEvents, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'user_id' })
     user: User;
 

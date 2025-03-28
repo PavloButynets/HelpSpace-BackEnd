@@ -2,14 +2,14 @@ import {inject, injectable} from "inversify";
 import {DataSource} from "typeorm";
 import {DATABASE_TYPES} from "../../container/types/DatabaseTypes";
 import {BaseRepository} from "./BaseRepository";
-import {Project} from "../../domain/entities/ProjectEntity";
-import {IProjectRepository} from "../../domain/repositories/IProjectRepository";
+import {Event} from "../../domain/entities/EventEntity";
+import {IEventRepository} from "../../domain/repositories/IEventRepository";
 
 @injectable()
-export class ProjectRepository extends BaseRepository<Project> implements IProjectRepository{
+export class EventRepository extends BaseRepository<Event> implements IEventRepository{
 
     constructor(@inject(DATABASE_TYPES.DataSource) dataSource: DataSource) {
-        super(dataSource, Project);
+        super(dataSource, Event);
     }
 
 }

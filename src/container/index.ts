@@ -3,7 +3,7 @@ import userModuleContainer from "./modules/UserModule";
 import databaseModuleContainer from "./modules/DatabaseModules";
 import authModuleContainer from "./modules/AuthModule";
 import tokenModuleContainer from "./modules/TokenModule";
-import projectModuleContainer from "./modules/ProjectModule";
+import eventModuleContainer from "./modules/EventModule";
 import emailModuleContainer from "./modules/EmailModule";
 
 export class AppContainer {
@@ -26,7 +26,7 @@ export class AppContainer {
         this.container.load(authModuleContainer)
         this.container.load(userModuleContainer);
         this.container.load(tokenModuleContainer);
-        this.container.load(projectModuleContainer)
+        this.container.load(eventModuleContainer)
         this.container.load(emailModuleContainer)
     }
 

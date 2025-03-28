@@ -1,4 +1,4 @@
-import {Repository, DataSource, EntityTarget} from "typeorm";
+import {Repository, DataSource, EntityTarget, FindOptionsOrder, FindOptionsWhere} from "typeorm";
 import {IBaseRepository} from "../../domain/repositories/IBaseRepository";
 import {QueryDeepPartialEntity} from "typeorm/query-builder/QueryPartialEntity";
 
@@ -37,6 +37,26 @@ export abstract class BaseRepository<T extends Object> implements IBaseRepositor
         return updatedEntity;
     }
 
+    async findWithPagination(
+        page: number,
+        pageSize: number,
+        where?: FindOptionsWhere<T>,
+        order?: FindOptionsOrder<T>
+    ): Promise<{ data: T[]; total: number; page: number; pageSize: number; totalPages: number }> {
+        const [data, total] = await this.repository.findAndCount({
+            skip: (page - 1) * pageSize,
+            take: pageSize,
+            where,
+            order,
+        });
+        return {
+            data,
+            total,
+            page,
+            pageSize,
+            totalPages: Math.ceil(total / pageSize),
+        };
+    }
     // async findItemsByParams(filter: FindOptionsWhere<T>): Promise<IFindItemsDataSet<T>> {
     //     return this.repository.find({ where: filter });
     // }
