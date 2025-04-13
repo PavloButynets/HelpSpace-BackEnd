@@ -1,5 +1,5 @@
 import { lengths } from "../../consts/validation";
-import {ProjectCategory, ProjectStatus} from "../../consts/enums";
+import {EventCategory, ProjectStatus} from "../../consts/enums";
 
 const { MAX_TITLE_LENGTH, MAX_PROJECT_DESCRIPTION_LENGTH } = lengths;
 
@@ -38,7 +38,7 @@ export const createProjectValidationEntity = {
     category: {
         type: 'enum',
         required: false,
-        values: Object.values(ProjectCategory)
+        values: Object.values(EventCategory)
     },
     deadline: {
         type: 'date',

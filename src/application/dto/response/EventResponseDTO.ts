@@ -6,13 +6,13 @@ export class EventResponseDTO {
     title: string;
     description: string;
     maxVolunteers?: number;
-    deadline?: Date;
-    photos?: string[];
+    registrationDeadline?: Date;
+    coverImage?: string;
     status?: ProjectStatus;
     location: string;
     categories: Category[];
     rewardPoints?: number;
-    author: {
+    creator: {
         id: string;
         photo?: string;
         firstName: string;

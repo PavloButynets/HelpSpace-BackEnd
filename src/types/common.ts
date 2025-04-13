@@ -5,3 +5,7 @@ export interface PaginatedResponse<T> {
     limit: number;
     totalPages: number;
   }
+
+  export interface S3File extends Express.Multer.File {
+    location: string;
+}

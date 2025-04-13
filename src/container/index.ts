@@ -5,6 +5,8 @@ import authModuleContainer from "./modules/AuthModule";
 import tokenModuleContainer from "./modules/TokenModule";
 import eventModuleContainer from "./modules/EventModule";
 import emailModuleContainer from "./modules/EmailModule";
+import locationModuleContainer from "./modules/LocationModule";
+import categoryModuleContainer from "./modules/CategoryModule";
 
 export class AppContainer {
     private static _instance: AppContainer | null = null; // Singleton instance
@@ -28,6 +30,8 @@ export class AppContainer {
         this.container.load(tokenModuleContainer);
         this.container.load(eventModuleContainer)
         this.container.load(emailModuleContainer)
+        this.container.load(locationModuleContainer)
+        this.container.load(categoryModuleContainer)
     }
 
     public getContainer(): Container {

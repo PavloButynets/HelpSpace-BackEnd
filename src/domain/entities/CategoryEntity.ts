@@ -2,11 +2,11 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
 import { Event } from './EventEntity';
 @Entity('categories')
 export class Category {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
     @Column({ type: 'varchar', length: 50, unique: true })
-    name: string;
+    name: string ;
     
     @Column({ type: 'text', nullable: true })
     description: string;

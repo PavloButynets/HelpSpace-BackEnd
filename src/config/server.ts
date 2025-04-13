@@ -5,8 +5,12 @@ import { config } from "./envConfig";
 
 export const serverSetup = async (app: Application): Promise<void> => {
   initialization(app);
-  app.listen(config.SERVER_PORT, () => {
-    logger.info(`Server is running on port ${config.SERVER_PORT}`);
+
+  const ports = [config.SERVER_PORT]; // Три порти для сервера
+
+  ports.forEach((port) => {
+    app.listen(port, () => {
+      logger.info(`Server is running on port ${port}`);
+    });
   });
 };
-

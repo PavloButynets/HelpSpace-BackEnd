@@ -11,6 +11,7 @@ import { User } from './UserEntity';
 import { Category } from './CategoryEntity';
 import {ProjectStatus} from "../../consts/enums";
 import {EventAssignment} from "./EventAssignmentEntity";
+import {IsOptional} from "class-validator";
 
 @Entity('events')
 export class Event {
@@ -23,14 +24,18 @@ export class Event {
     @Column({ type: 'text', nullable: false })
     description: string;
 
+    @IsOptional()
     @Column({ type: 'text', nullable: true })
-    photos: string[];
+    coverImage: string;
 
     @Column({ type: 'varchar', enum: ProjectStatus, default: ProjectStatus.NEW })
     status: ProjectStatus;
 
     @Column({ type: 'varchar', length: 255, nullable: true })
-    location: string;
+    city: string;
+
+    @Column({ type: 'varchar', length: 255, nullable: true })
+    address: string;
 
     @Column({ type: 'timestamp' })
     startDate: Date;
@@ -39,13 +44,14 @@ export class Event {
     endDate: Date;
 
     @Column({ type: 'timestamp', nullable: true })
-    deadline: Date;
+    registrationDeadline: Date;
 
     @Column({ type: 'int', nullable: true })
-    maxVolunteers: number;
+    volunteerSlots: number;
+
 
     @Column({ type: 'int', default: 0 })
-    rewardPoints: number;
+    participantsCount: number;
 
     @CreateDateColumn()
     createdAt: Date;
@@ -61,7 +67,7 @@ export class Event {
     // @JoinColumn({ name: 'organization_id' })
     // assignedOrganization?: Organization;
 
-    @ManyToMany(() => Category, category => category.events, { eager: true })
+    @ManyToMany(() => Category, category => category.events, { eager: true, cascade: true })
     @JoinTable({
         name: 'event_categories',
         joinColumn: { name: 'event_id', referencedColumnName: 'id' },

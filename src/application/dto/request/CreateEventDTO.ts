@@ -2,17 +2,15 @@ import {
     IsString,
     IsOptional,
     MaxLength,
-    IsEnum,
     IsInt,
     Min,
     IsArray,
-    IsUrl,
     IsUUID,
     IsDate, MinLength
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ProjectCategory, ProjectStatus } from "../../../consts/enums";
 import { lengths } from "../../../consts/validation";
+import {Category} from "../../../domain/entities/CategoryEntity";
 
 const { MAX_TITLE_LENGTH, MAX_PROJECT_DESCRIPTION_LENGTH, MIN_DESCRIPTION_LENGTH } = lengths;
 
@@ -29,22 +27,25 @@ export class CreateEventDTO {
 
     @IsOptional()
     @IsArray()
-    @IsUrl({}, { each: true })
-    photos?: string[];
+    coverImage?: string;
 
-    @IsOptional()
-    @IsEnum(ProjectStatus)
-    status?: ProjectStatus;
-
-    @IsOptional()
     @IsString()
     location: string;
 
-    @IsOptional()
-    @IsEnum(ProjectCategory)
-    category?: ProjectCategory;
+    @IsString()
+    city: string;
 
     @IsOptional()
+    categories?: Category[];
+
+    @Type(() => Date)
+    @IsDate()
+    startDate: Date;
+
+    @Type(() => Date)
+    @IsDate()
+    endDate: Date;
+
     @Type(() => Date)
     @IsDate()
     deadline?: Date;
@@ -52,12 +53,8 @@ export class CreateEventDTO {
     @IsOptional()
     @IsInt()
     @Min(1)
-    maxVolunteers?: number;
+    volunteerSlots?: number;
 
-    @IsOptional()
-    @IsInt()
-    @Min(0)
-    rewardPoints?: number;
 
     @IsUUID()
     creator: string;

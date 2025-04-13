@@ -1,18 +1,10 @@
 export enum ProjectStatus {
-    NEW = 'new',
-    IN_PROGRESS = 'in_progress',
-    COMPLETED = 'completed',
-    CANCELED = 'canceled',
+    NEW = 'NEW',
+    ONGOING = 'ONGOING',
+    COMPLETED = 'COMPLETED',
+    CANCELED = 'CANCELED',
 }
 
-export enum ProjectCategory {
-    HEALTHCARE = 'healthcare',
-    EDUCATION = 'education',
-    ENVIRONMENT = 'environment',
-    SOCIAL = 'social',
-    EMERGENCY = 'emergency',
-    OTHER = 'other',
-}
 
 export enum OrganizationMemberEnum{
     OWNER = 'owner',
