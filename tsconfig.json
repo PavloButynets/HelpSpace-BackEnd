@@ -38,5 +38,5 @@
     "node_modules",
     "dist"
   ],
-  "types": ["node", "express"],
+  "types": ["node", "express"]
 }

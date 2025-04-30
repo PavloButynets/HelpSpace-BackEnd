@@ -1,26 +1,52 @@
-import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
-import {Event} from "./EventEntity";
-import {User} from "./UserEntity";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { Max, Min } from "class-validator";
+import { Event } from "./EventEntity";
+import { User } from "./UserEntity";
+import { EventAssignmentStatus } from "../../consts/enums";
 
-@Entity('project_assignments')
+@Entity("event_assignments")
 export class EventAssignment {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @ManyToOne(() => Event, (project) => project.assignedVolunteers, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'project_id' })
-    event: Event;
+  @ManyToOne(() => Event, (event) => event.assignedVolunteers, {
+    onDelete: "CASCADE",
+    eager: true,
+  })
+  @JoinColumn({ name: "event_id" })
+  event: Event;
 
-    @ManyToOne(() => User, (user) => user.assignedEvents, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'user_id' })
-    user: User;
+  @ManyToOne(() => User, (user) => user.assignedEvents, {
+    onDelete: "CASCADE",
+    eager: true,
+  })
+  @JoinColumn({ name: "user_id" })
+  user: User;
 
-    @Column({ type: 'decimal', precision: 5, scale: 2, default: 0 })
-    hoursWorked: number;
+  @Column({
+    type: "varchar",
+    enum: EventAssignmentStatus,
+    default: EventAssignmentStatus.PENDING,
+  })
+  status: EventAssignmentStatus;
 
-    @Column({ type: 'text', nullable: true })
-    feedback?: string;
+  @Column({ type: "decimal", precision: 5, scale: 2, default: 0 })
+  hoursWorked: number;
 
-    @CreateDateColumn({ name: 'joined_at' })
-    joinedAt: Date;
+  @Min(0)
+  @Max(5)
+  @Column({ type: "int", default: 0 })
+  stars?: number;
+  @Column({ type: "text", nullable: true })
+  feedback?: string;
+
+  @CreateDateColumn({ name: "joined_at" })
+  joinedAt: Date;
 }

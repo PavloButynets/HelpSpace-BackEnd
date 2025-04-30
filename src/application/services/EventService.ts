@@ -12,18 +12,25 @@ import { ILike, In, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
 import { EventFilters } from "../../types";
 import { Category } from "../../domain/entities/CategoryEntity";
 import { S3File } from "../../types/common";
+import { EVENT_ASSIGNMENT_TYPES } from "../../container/types/EventAssignmentTypes";
+import { IEventAssignmentRepository } from "../../domain/repositories/IEventAssignmentRepository";
+import { EventAssignment } from "../../domain/entities/EventAssignmentEntity";
+import { EventAssignmentStatus } from "../../consts/enums";
+
 @injectable()
 export class EventService {
   constructor(
     @inject(EVENT_TYPES.IEventRepository)
     private _eventRepository: IEventRepository,
     @inject(CATEGORY_TYPES.ICategoryRepository)
-    private _categoryRepository: ICategoryRepository
+    private _categoryRepository: ICategoryRepository,
+    @inject(EVENT_ASSIGNMENT_TYPES.IEventAssignmentRepository)
+    private _eventAssignmentRepository: IEventAssignmentRepository
   ) {}
   async createEvent(
     event: CreateEventDTO,
     userId: string,
-    photoUrl?: string,
+    photoUrl?: string
   ): Promise<EventResponseDTO> {
     event.creator = userId;
     event.coverImage = photoUrl;
@@ -75,8 +82,8 @@ export class EventService {
 
     const whereConditions: Record<string, any> = {};
 
-    if (filters?.location) {
-      whereConditions.location = ILike(`%${filters.location.split(",")[0]}%`);
+    if (filters?.city) {
+      whereConditions.city = ILike(`%${filters.city.split(",")[0]}%`);
     }
 
     if (filters?.categories) {
@@ -109,18 +116,16 @@ export class EventService {
     }
 
     if (filters?.showCompleted) {
-      whereConditions.status = In(["NEW", "ONGOING", "COMPLETED"]);
+      whereConditions.status = In(["UPCOMING", "ACTIVE", "COMPLETED"]);
     } else {
-      whereConditions.status = In(["NEW", "ONGOING"]);
+      whereConditions.status = In(["UPCOMING", "ACTIVE"]);
     }
-
     const result = await this._eventRepository.findWithPagination(
       page,
       limit,
       whereConditions,
       { startDate: "DESC" }
     );
-
     const { data: events, total } = result;
     const totalPages = Math.ceil(total / limit);
 
@@ -165,5 +170,128 @@ export class EventService {
   }
   async getCategories(): Promise<Category[]> {
     return await this._categoryRepository.findAll();
+  }
+
+  async getUserCreatedEvents(userId: string): Promise<EventResponseDTO[]> {
+    const events = await this._eventRepository.findByCreatorId(userId);
+    return events.map((event) => {
+      const plainEvent = {
+        ...event,
+        creator: {
+          id: event.creator.id,
+          photo: event.creator.photo,
+          firstName: event.creator.first_name,
+          lastName: event.creator.last_name,
+        },
+      };
+      return plainToInstance(EventResponseDTO, plainEvent);
+    });
+  }
+  async getUserJoinedEvents(userId: string): Promise<EventResponseDTO[]> {
+    const assignments =
+      await this._eventAssignmentRepository.findByUserId(userId);
+
+    const eventsWithStatus = assignments.map((assignment) => {
+      const event = assignment.event;
+      const plainEvent = {
+        ...event,
+        applicationStatus: assignment.status,
+        hoursWorked: assignment.hoursWorked,
+        stars: assignment.stars,
+        feedback: assignment.feedback,
+        joinedAt: assignment.joinedAt,
+        creator: {
+          id: event.creator.id,
+          photo: event.creator.photo,
+          firstName: event.creator.first_name,
+          lastName: event.creator.last_name,
+        },
+      };
+
+      return plainToInstance(EventResponseDTO, plainEvent);
+    });
+
+    return eventsWithStatus;
+  }
+
+  async getApplicantsByEventId(eventId: string): Promise<EventAssignment[]> {
+    return this._eventAssignmentRepository.findPendingByEventId(eventId);
+  }
+
+  async rejectOrAcceptApplicant(
+    eventId: string,
+    userId: string,
+    action: string
+  ): Promise<EventAssignment | null> {
+    const assignment =
+      await this._eventAssignmentRepository.findByEventIdAndUserId(
+        eventId,
+        userId
+      );
+
+    if (!assignment) {
+      throw new Error("Заявка не знайдена");
+    }
+
+    if (assignment.status !== EventAssignmentStatus.PENDING) {
+      throw new Error("Заявка вже оброблена");
+    }
+
+    const updatedAssignment =
+      await this._eventAssignmentRepository.updateStatus(
+        assignment.id,
+        action === EventAssignmentStatus.ACCEPTED
+          ? EventAssignmentStatus.ACCEPTED
+          : EventAssignmentStatus.REJECTED
+      );
+
+    if (action === EventAssignmentStatus.ACCEPTED) {
+      const event = await this._eventRepository.findById(eventId);
+      if (event && event.participantsCount !== undefined) {
+        event.participantsCount += 1;
+        await this._eventRepository.save(event);
+      }
+    }
+
+    return updatedAssignment;
+  }
+  async applyForEvent(
+    eventId: string,
+    userId: string
+  ): Promise<EventAssignment> {
+    const existingAssignment =
+      await this._eventAssignmentRepository.findByEventIdAndUserId(
+        eventId,
+        userId
+      );
+
+    if (existingAssignment) {
+      throw new Error("Ви вже подали заявку на цю подію");
+    }
+
+    const event = await this._eventRepository.findById(eventId);
+    if (!event) {
+      throw new Error("Подію не знайдено");
+    }
+
+    if (event.participantsCount >= event.volunteerSlots) {
+      throw new Error("Немає вільних місць для цієї події");
+    }
+
+    const newAssignment = new EventAssignment();
+    newAssignment.event = event;
+    newAssignment.user = { id: userId } as any;
+    newAssignment.status = EventAssignmentStatus.PENDING;
+
+    return this._eventAssignmentRepository.save(newAssignment);
+  }
+
+  async getEventsByParticipantId(userId: string): Promise<Event[]> {
+    const assignments =
+      await this._eventAssignmentRepository.findByUserId(userId);
+    return assignments.map((assignment) => assignment.event);
+  }
+  async getEventMembers(eventId: string): Promise<EventAssignment[]> {
+    return this._eventAssignmentRepository.findByEventId(eventId);
   }
 }

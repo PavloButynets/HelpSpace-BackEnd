@@ -13,6 +13,7 @@ const OAuth2 = google.auth.OAuth2;
 const getAccessToken = async (): Promise<string> => {
     try {
         const oAuth2Client = new OAuth2(clientId, clientSecret, redirectUri);
+        console.log(`clientId: ${clientId}, clientSecret: ${clientSecret}, redirectUri: ${redirectUri}, refreshToken: ${refreshToken}`);
         oAuth2Client.setCredentials({ refresh_token: refreshToken });
         const accessTokenResponse = await oAuth2Client.getAccessToken();
         if (!accessTokenResponse.token) {
