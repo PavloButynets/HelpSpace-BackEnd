@@ -6,12 +6,16 @@ import {
   UpdateDateColumn,
   OneToOne,
   OneToMany,
+  ManyToMany,
+  JoinTable,
 } from "typeorm";
 import { Token } from "./TokenEntity";
 import { Event } from "./EventEntity";
 import { EventAssignment } from "./EventAssignmentEntity";
 import { OrganizationMembership } from "./OrganizationMembership";
 import { UserSkill } from "./UserSkills";
+import { Message } from "./MessageEntity";
+import { Conversation } from "./ConversationEntity";
 
 export enum UserRole {
   ADMIN = "admin",
@@ -80,6 +84,22 @@ export class User {
 
   @OneToMany(() => UserSkill, (userSkill) => userSkill.user)
   userSkills: UserSkill[];
+
+  @OneToMany(() => Message, (message) => message.sender)
+  sentMessages: Message[];
+
+  @OneToMany(() => Message, (message) => message.receiver)
+  receivedMessages: Message[];
+
+  @ManyToMany(() => Conversation, (conversation) => conversation.participants)
+  @JoinTable()
+  conversations: Conversation[];
+
+  @Column({ default: true })
+  isActive: boolean;
+
+  @Column({ nullable: true })
+  lastSeen: Date;
 
   @OneToMany(
     () => OrganizationMembership,

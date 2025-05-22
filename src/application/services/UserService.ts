@@ -26,6 +26,7 @@ export class UserService {
     const users: User[] = await this.userRepository.findAll();
     return users.map((user) => {
       return {
+        id: user.id,
         firstName: user.first_name,
         lastName: user.last_name,
         email: user.email,

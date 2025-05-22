@@ -19,7 +19,10 @@ export const event = () => {
   const authMiddleware = container.get<AuthMiddleware>(
     AUTH_TYPES.AuthMiddleware
   );
-
+  router.get(
+    "/categories",
+    asyncWrapper(eventController.getCategories.bind(eventController))
+  );
   router.use(authMiddleware.authMiddleware);
   router.post(
     "/create",
@@ -30,10 +33,6 @@ export const event = () => {
   router.get(
     "/",
     asyncWrapper(eventController.getEvents.bind(eventController))
-  );
-  router.get(
-    "/categories",
-    asyncWrapper(eventController.getCategories.bind(eventController))
   );
 
   router.get(
